@@ -1,0 +1,92 @@
+%META:TOPICINFO{author="ProjectContributor" date="1397744089" format="1.1" version="1"}%
+<!--
+One line description, required for extensions repository catalog.
+   * Set SHORTDESCRIPTION = Add the ACL wildcard (*) feature to Foswiki 1.1.x systems
+-->
+---+!! PatchItem12849Contrib
+
+%SHORTDESCRIPTION%
+
+%TOC%
+
+---++ Usage
+
+This extensions applies a "hotfix" for Foswikitask:Item12849 to your Foswiki 1.1.0 thru 1.1.9 system.   This patch has not been tested against Foswiki 1.0.x.
+
+<blockquote>
+<div class="foswikiAlert">%X% *NOTICE:* This patch adds a new ACL feature to Foswiki. Foswiki 1.2 will finish the deprecation of the empty DENYTOPICVIEW=
+ACL, replacing it with a new wildcard ACL:  =Set ALLOWTOPICVIEW = *=   Without this patch, extensions developed using the new ACL syntax will not be backwards
+compatible with Foswiki 1.1.x. </div>
+</blockquote>
+
+With this patch applied, the mechanism of using an empty =DENYTOPIC&lt;action&gt;= rule can be replaced with the equivalent 
+=ALLOWTOPIC&lt;action&gt; = *=.   A utility is also provided that will convert any existing empty DENYTOPIC rules into the equivelant ALLOWTOPIC rule.
+Note that empty =DENYWEB= ACLs are treated as comments, and are not active.
+
+This patch does not remove the empty =DENYTOPIC= behavior.
+
+While the empty =DENY= is only functional for =DENYTOPIC=, the =ALLOW *= is active at either the =TOPIC= or =WEB= level.
+
+For example, if you want completely open access to a topic, then use the following rule:
+   * <tt>Set ALLOWTOPICVIEW = *</tt>: This allows view access by anyone including the anonymous !WikiGuest user. 
+
+| | *Without this patch* | *With patch applied* | *Notes* |
+| Allow ALL users to a topic | Set =DENYTOPIC&lt;action&gt;= to an empty string | =Set ALLOWTOPIC&lt;action&gt;= to * | Empty =DENYTOPIC= is still usable until Foswiki 1.2 |
+| Allow ALL users to a web | Do not set any ALLOW or DENY ACLs | _(no change)_ %BR%-or-%BR%Set ALLOWWEB&lt;action&gt; = * | Adding the ALLOW = * may better document intention vs. oversight |
+| Allow All logged-in users%BR%to a topic or web | Set =DENY= to %USERSWEB%.WikiGuest | Leave =ALLOW= un-set,%BR%-or-%BR% Set =ALLOW= to * | The addition of ALLOW is unnecessary, but may better document the intentions. |
+| Deny all access | Set ALLOW to NobodyGroup | Set ALLOW to NobodyGroup%BR%-or-%BR% Set DENY to * |
+| Allow selected users | Set ALLOW to desired users/groups | _(no change)_ |
+| Deny selected users | Set DENY to desired users/groups | _(no change)_ |
+ 
+<blockquote class="foswikiHelp"> %X% Note that it is not possible to override a DENY with an ALLOW at the same level    ALLOW on a topic can override DENY at the web level, but not at the TOPIC level</blockquote>
+
+---++ Topic Authorization Flow
+
+This diagram provides additional information on how Foswiki decides if a user
+is permitted or denied access:
+
+<img src="%ATTACHURLPATH%/Foswiki-auth-flow.jpg" alt="Foswiki authorization flow" />
+
+
+---++ Installation
+When this extension is installed, it uses the Post-installation exit to apply any patch files found in the manifest. 
+
+<blockquote class="foswikiAlert">%X% *CAUTION:*  This patch contrib is *not
+intended for systems installed using =.rpm= or =.deb= packages*.  Installation on systems that installed Foswiki using the Debian/Ubuntu/Mint
+=.deb= or RHEL/Centos/Fedora/SuSE =.rpm= files is not supported.
+</blockquote>
+
+This extension ships with the following patch files:
+
+| *Original Issue* | *Patch File* | *Description* | *Applies to* |
+| [[http://foswiki.org/Tasks/Item12849][Item12849]] | =Item12849-001= | Add ALLOW / DENY wildcard syntax | Foswiki 1.1.0 |
+| [[http://foswiki.org/Tasks/Item12849][Item12849]] | =Item12849-002= | Add ALLOW / DENY wildcard syntax | Foswiki 1.1.1 - Foswiki 1.1.3 |
+| [[http://foswiki.org/Tasks/Item12849][Item12849]] | =Item12849-003= | Add ALLOW / DENY wildcard syntax | Foswiki 1.1.4 |
+| [[http://foswiki.org/Tasks/Item12849][Item12849]] | =Item12849-004= | Add ALLOW / DENY wildcard syntax | Foswiki 1.1.5 |
+| [[http://foswiki.org/Tasks/Item12849][Item12849]] | =Item12849-005= | Add ALLOW / DENY wildcard syntax | Foswiki 1.1.6 - Foswiki 1.1.9 |
+
+Before any file is patched, a backup is copied to =working/configure/backup/&lt;Item12849-001-date-time&gt;=. Each file that is a candidate to be patched is backed up.  If the extensions is installed multple times, a new backup is made for each run, regardless of whether or not the patch will be applied.  For this patch, the following files are copied:
+   * =lib/Foswiki/Users.pm=
+
+Patches are only applied if the target file is an _exact_ match to the original file.  There is no attempt to do "fuzzy" patching. 
+
+If your system uses alternate locations for web names and directories, patches will be mapped from the default Foswiki filename to the directory location used on the target system.
+
+If this contrib is uninstalled, the patches will be reversed and the original files restored.
+
+%$INSTALL_INSTRUCTIONS%
+
+---++ Info
+
+|  Author: | GeorgeClark |
+|  Copyright &copy;: | Foswiki Contributors |
+|  License: | GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]]) |
+|  Dependencies: | %$DEPENDENCIES% |
+|  Version: | %$VERSION% |
+|  Change History: | <!-- versions below in reverse order -->&nbsp; |
+|  1.0 (11 Apr 2014) | Initial version |
+|  Home: | http://foswiki.org/Extensions/%TOPIC% |
+|  Support: | http://foswiki.org/Support/%TOPIC% |
+
+%META:FILEATTACHMENT{name="Foswiki-auth-flow.jpg" attr="h" comment="Foswiki ACL Flow" size="41365" date="1397744089" user="ProjectContributor" version="1"}%
+

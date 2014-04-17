@@ -1,0 +1,9 @@
+!noci
+data/System/PatchItem12849Contrib.txt 0644
+lib/Foswiki/Contrib/PatchItem12849Contrib.pm 0444
+pub/System/PatchItem12849Contrib/Foswiki-auth-flow.jpg 0644
+working/configure/patch/Item12849-001.patch 0644 Patch to Foswiki 1.1.0
+working/configure/patch/Item12849-002.patch 0644 Patch to Foswiki 1.1.1-1.1.3
+working/configure/patch/Item12849-003.patch 0644 Patch to Foswiki 1.1.4
+working/configure/patch/Item12849-004.patch 0644 Patch to Foswiki 1.1.5
+working/configure/patch/Item12849-005.patch 0644 Patch to Foswiki 1.1.6-1.1.9
